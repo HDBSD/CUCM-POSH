@@ -1,4 +1,4 @@
-function Get-CUCMLdapConnectors {
+function Find-CUCMLdapConnectors {
     param(
         [Parameter(ParameterSetName = 'filter', Mandatory = $false, Position = 0)][int]$ConnectionId = 0
     )
