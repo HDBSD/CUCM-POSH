@@ -1,8 +1,8 @@
 function Find-CUCMDeviceProfile {
     [CmdletBinding(DefaultParameterSetName = 'NameSearch')]
     param(
-        [Parameter(ParameterSetName = 'NameSearch', Mandatory = $true, Position = 0)]
-        [string]$ProfileName,
+        [Parameter(ParameterSetName = 'NameSearch', Mandatory = $false, Position = 0)]
+        [string]$ProfileName = "%",
         [Parameter(ParameterSetName = 'DescriptionSearch', Mandatory = $true, Position = 0)]
         [string]$Description,
         [Parameter(ParameterSetName = 'DescriptionSearch', Mandatory = $false, Position = 1)]
@@ -10,6 +10,52 @@ function Find-CUCMDeviceProfile {
         [int]$SessionIndex = 0
     )
     
+    <#
+    .SYNOPSIS
+    Search/list Device Profiles in call manager 
+
+    .DESCRIPTION
+    Search/list Device Profiles in call manager
+    Performs a contains search on name or description depending on provided parameters
+
+    .PARAMETER ProfileName
+    Find all device profiles where the profile name contain the provided ProfileName. supports wildcard '%'
+
+    .PARAMETER Description 
+    Find all device profiles where the description contain the provided Description. supports wildcard '%'
+
+    .PARAMETER SessionIndex
+    Specify which session index this request should be completed using.
+
+    .INPUTS
+    None.
+
+    .OUTPUTS
+    Returns a table contain the below.
+    [string]'{uuid}', [string]'name' and [string]'description'
+
+    .EXAMPLE
+    PS> Find-CUCMDeviceProfile
+
+    .EXAMPLE
+    PS> Find-CUCMDeviceProfile -SessionIndex 1
+
+    .EXAMPLE
+    PS> Find-CUCMDeviceProfile -ProfileName "Brad S"
+
+    .EXAMPLE
+    PS> Find-CUCMDeviceProfile -ProfileName "B%S"
+    
+    .EXAMPLE
+    PS> Find-CUCMDeviceProfile -ProfileName "Brad S" -SessionIndex 1
+    
+    .EXAMPLE
+    PS> Find-CUCMDeviceProfile -Description "Brad S office desk phone"
+    
+    .EXAMPLE
+    PS> Find-CUCMDeviceProfile -Description "B% phone" -SessionIndex 1
+    #>
+
     begin {
 
         if ($null -eq $script:Connections[$SessionIndex])
