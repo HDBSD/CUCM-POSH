@@ -1,16 +1,15 @@
 function Get-CUCMDeviceProfile {
     param(
         [Parameter(ParameterSetName = 'Connect', Mandatory = $true, Position = 0)][string]$ProfileName,
-        [Parameter(ParameterSetName = 'Connect', Mandatory = $false, Position = 1)][int]$ConnectionId = 0
+        [Parameter(ParameterSetName = 'Connect', Mandatory = $false, Position = 1)][int]$SessionIndex = 0
     )
     
     begin {
 
-        if ($null -eq $script:Connections[$ConnectionId])
+        if ($null -eq $script:Connections[$SessionIndex])
         {
             $PSCmdlet.ThrowTerminatingError("No Connection at specified id. double check your connection exists or create a connection first.")
         }
-
     }
 
     process {
@@ -28,7 +27,7 @@ function Get-CUCMDeviceProfile {
 
         try {
             $Result = Invoke-RestMethod -Method Post -ContentType "text/xml" -Body $soapReq `
-                                        -Credential $script:Connections[$ConnectionId].Creds -Uri $script:Connections[$ConnectionId].Server `
+                                        -WebSession $script:Connections[$SessionIndex].Session -Uri $script:Connections[$SessionIndex].Server `
                                         -ErrorAction Stop
         }
         catch 

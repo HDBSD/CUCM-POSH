@@ -33,10 +33,18 @@ function Find-CUCMEndUsers
         [Parameter(ParameterSetName = 'LastName',   Mandatory = $false, Position = 4)]
         [Parameter(ParameterSetName = 'UserId',     Mandatory = $false, Position = 4)]
         [Parameter(ParameterSetName = 'department', Mandatory = $false, Position = 4)]
-        [int]$ConnectionId = 0
+        [int]$SessionIndex = 0
     )
 
     begin {
+
+        if ($null -eq $script:Connections[$SessionIndex])
+        {
+            $PSCmdlet.ThrowTerminatingError("No Connection at specified id. double check your connection exists or create a connection first.")
+        }
+    }
+
+    process {
 
         $soapReq = @"
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/14.0">
@@ -62,12 +70,9 @@ function Find-CUCMEndUsers
 </soapenv:Envelope>
 "@
 
-    }
-
-    process {
         try {
             $Result = Invoke-RestMethod -Method Post -ContentType "text/xml" -Body $soapReq `
-                                        -Credential $script:Connections[$ConnectionId].Creds -Uri $script:Connections[$ConnectionId].Server `
+                                        -WebSession $script:Connections[$SessionIndex].Session -Uri $script:Connections[$SessionIndex].Server `
                                         -ErrorAction Stop
         }
         catch 

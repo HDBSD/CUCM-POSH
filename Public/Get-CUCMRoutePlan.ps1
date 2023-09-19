@@ -1,8 +1,16 @@
 function Get-CUCMRoutePlan {
     param(
         [Parameter(ParameterSetName = 'filter', Mandatory = $false, Position = 0)][string]$filter = "%",
-        [Parameter(ParameterSetName = 'filter', Mandatory = $false, Position = 1)][int]$ConnectionId = 0
+        [Parameter(ParameterSetName = 'filter', Mandatory = $false, Position = 1)][int]$SessionIndex = 0
     )
+
+    begin {
+
+        if ($null -eq $script:Connections[$SessionIndex])
+        {
+            $PSCmdlet.ThrowTerminatingError("No Connection at specified id. double check your connection exists or create a connection first.")
+        }
+    }
 
     process {
 
@@ -27,7 +35,7 @@ function Get-CUCMRoutePlan {
 
         try {
             $Result = Invoke-RestMethod -Method Post -ContentType "text/xml" -Body $soapReq `
-                                        -Credential $script:Connections[$ConnectionId].Creds -Uri $script:Connections[$ConnectionId].Server `
+                                        -WebSession $script:Connections[$SessionIndex].Session -Uri $script:Connections[$SessionIndex].Server `
                                         -ErrorAction Stop
         }
         catch 
