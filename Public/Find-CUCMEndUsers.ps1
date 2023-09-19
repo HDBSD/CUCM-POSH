@@ -10,26 +10,26 @@ function Find-CUCMEndUsers
         [Parameter(ParameterSetName = 'department', Mandatory = $false, Position = 1)]
         [string]$firstName = "%",
 
-        [Parameter(ParameterSetName = 'FirstName',  Mandatory = $true,  Position = 1)]
-        [Parameter(ParameterSetName = 'LastName',   Mandatory = $false, Position = 0)]
+        [Parameter(ParameterSetName = 'FirstName',  Mandatory = $false, Position = 1)]
+        [Parameter(ParameterSetName = 'LastName',   Mandatory = $true,  Position = 0)]
         [Parameter(ParameterSetName = 'UserId',     Mandatory = $false, Position = 1)]
         [Parameter(ParameterSetName = 'department', Mandatory = $false, Position = 1)]
         [string]$lastName = "%",
 
-        [Parameter(ParameterSetName = 'FirstName',  Mandatory = $true,  Position = 2)]
+        [Parameter(ParameterSetName = 'FirstName',  Mandatory = $false, Position = 2)]
         [Parameter(ParameterSetName = 'LastName',   Mandatory = $false, Position = 2)]
-        [Parameter(ParameterSetName = 'UserId',     Mandatory = $false, Position = 0)]
+        [Parameter(ParameterSetName = 'UserId',     Mandatory = $true,  Position = 0)]
         [Parameter(ParameterSetName = 'department', Mandatory = $false, Position = 2)]
         [string]$userid = "%",
 
-        [Parameter(ParameterSetName = 'FirstName',  Mandatory = $true,  Position = 3)]
+        [Parameter(ParameterSetName = 'FirstName',  Mandatory = $false, Position = 3)]
         [Parameter(ParameterSetName = 'LastName',   Mandatory = $false, Position = 3)]
         [Parameter(ParameterSetName = 'UserId',     Mandatory = $false, Position = 3)]
-        [Parameter(ParameterSetName = 'department', Mandatory = $false, Position = 0)]
+        [Parameter(ParameterSetName = 'department', Mandatory = $true,  Position = 0)]
         [string]$department = "%",
 
 
-        [Parameter(ParameterSetName = 'FirstName',  Mandatory = $true,  Position = 4)]
+        [Parameter(ParameterSetName = 'FirstName',  Mandatory = $false, Position = 4)]
         [Parameter(ParameterSetName = 'LastName',   Mandatory = $false, Position = 4)]
         [Parameter(ParameterSetName = 'UserId',     Mandatory = $false, Position = 4)]
         [Parameter(ParameterSetName = 'department', Mandatory = $false, Position = 4)]
