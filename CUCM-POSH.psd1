@@ -32,6 +32,7 @@
         'Find-CUCMLdapConnectors',
         'Get-CUCMDeviceProfile',
         'Get-CUCMRoutePlan',
+        'Get-CUCMSessions',
         'Set-CUCMIgnoreSSL',
         'Start-CUCMLdapSync'
     )
