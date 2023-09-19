@@ -16,7 +16,7 @@ function Get-CUCMDeviceProfile {
     process {
 
         $soapReq = @"
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/11.0">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/14.0">
     <soapenv:Header/>
     <soapenv:Body>
         <ns:getDeviceProfile sequence="1">
