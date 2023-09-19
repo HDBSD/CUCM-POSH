@@ -33,10 +33,10 @@ function Get-CUCMDeviceProfile {
         }
         catch 
         {
-            $PSCmdlet.ThrowTerminatingError("Failed to make request. $_")
+            $PSCmdlet.ThrowTerminatingError($_)
         }
         
-        $Result
+        $Result.Envelope.Body.getDeviceProfileResponse.return.deviceProfile
     }
 
 }
