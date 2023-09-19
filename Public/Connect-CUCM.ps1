@@ -49,6 +49,9 @@ function Connect-CUCM {
 
     begin 
     {
+
+        # build a uri and check its using https, port 8443 and requesting the "/axl/" path
+
         $uri = $null
 
         if ($NoAddressValidation -eq $false)
@@ -64,8 +67,12 @@ function Connect-CUCM {
         }
         else 
         {
+            # if NoAddressValidation is enabled, just dont bother checking
+
             $uri = [System.UriBuilder]::new($CUCMAddress)
         }
+
+        # set URI to the built URI string
 
         $uri = $uri.Uri
 
