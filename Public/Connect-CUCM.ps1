@@ -111,7 +111,7 @@ function Connect-CUCM {
 
         $id = New-Guid
 
-        $script:Connections += [pscustomobject]@{ID=$id; Server = $CUCMAddress; Creds = $credentials; Session=$sessionVar}
+        $script:Connections += [pscustomobject]@{ID=$id; Server = $CUCMAddress; Session=$sessionVar}
         write-host "Connection successful. Session assigned ID: $id)"
     }
 }
