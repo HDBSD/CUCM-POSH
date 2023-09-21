@@ -35,6 +35,7 @@
         'Get-CUCMRoutePlan',
         'Get-CUCMSessions',
         'Set-CUCMIgnoreSSL',
+        'New-CUCMForwardBlock',
         'Start-CUCMLdapSync'
     )
     
