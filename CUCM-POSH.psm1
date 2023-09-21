@@ -1,4 +1,5 @@
 $script:Connections = @()
+$Script:AxlVersion = "12.0"
 
 $scripts = @(Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue) + @(Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue)
 

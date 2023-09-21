@@ -31,11 +31,13 @@
         'Find-CUCMDeviceProfile',
         'Find-CUCMEndUsers',
         'Find-CUCMLdapConnectors',
+        'Get-CUCMAxlVersion',
         'Get-CUCMDeviceProfile',
         'Get-CUCMRoutePlan',
         'Get-CUCMSessions',
-        'Set-CUCMIgnoreSSL',
         'New-CUCMForwardBlock',
+        'Set-CUCMAxlVersion',
+        'Set-CUCMIgnoreSSL',
         'Start-CUCMLdapSync'
     )
     
