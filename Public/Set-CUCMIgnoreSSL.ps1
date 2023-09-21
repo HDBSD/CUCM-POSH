@@ -1,3 +1,29 @@
+<#
+.SYNOPSIS
+Disables SSL certificate validation for Cisco Unified Call Manager (CUCM) connections in the current session.
+
+.DESCRIPTION
+This function disables SSL certificate validation for CUCM connections within the current PowerShell session. It can be useful for testing and development environments but should be used with caution in production environments.
+
+Note: Disabling SSL certificate validation is not recommended for production use, as it may expose your communication to security risks.
+
+.INPUTS
+None.
+
+.OUTPUTS
+None.
+
+.EXAMPLE
+PS> Set-CUCMIgnoreSSL
+
+Description:
+Disables SSL certificate validation for CUCM connections in the current session.
+
+.NOTES
+Author: Brad S
+Version: 1.0.0
+#>
+
 function Set-CUCMIgnoreSSL {
 
     $certCallBack = @'
@@ -15,7 +41,7 @@ public class TrustAllPolicy : ICertificatePolicy {
         }
 }
 '@
+    # Add a custom certificate policy to disable certificate validation
     Add-Type $certCallBack
-    [System.Net.ServicePointManager]::CertificatePolicy = new-object TrustAllPolicy
-
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllPolicy
 }

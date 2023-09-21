@@ -1,3 +1,41 @@
+<#
+.SYNOPSIS
+Get Cisco Unified Call Manager (CUCM) Route Plans.
+
+.DESCRIPTION
+This function retrieves CUCM Route Plans based on the specified filter.
+
+.PARAMETER filter
+Specifies the filter for the Route Plans to retrieve. Supports wildcard '%'.
+
+.PARAMETER SessionIndex
+Specifies the index of the CUCM session to use for the operation.
+
+.INPUTS
+None.
+
+.OUTPUTS
+Returns a list of Route Plans including their DN/Pattern, type, partition, and routeDetail.
+
+.EXAMPLE
+PS> Get-CUCMRoutePlan
+
+Description:
+Retrieves all CUCM Route Plans.
+
+.EXAMPLE
+PS> Get-CUCMRoutePlan -filter "1XXX"
+
+Description:
+Retrieves CUCM Route Plans with patterns that match "1XXX".
+
+.EXAMPLE
+PS> Get-CUCMRoutePlan -filter "2%" -SessionIndex 1
+
+Description:
+Retrieves CUCM Route Plans with patterns starting with "2" using the specified session index.
+#>
+
 function Get-CUCMRoutePlan {
     param(
         [Parameter(ParameterSetName = 'filter', Mandatory = $false, Position = 0)][string]$filter = "%",
@@ -15,7 +53,7 @@ function Get-CUCMRoutePlan {
     process {
 
         $soapReq = @"
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/14.0">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/$Script:AxlVersion">
     <soapenv:Header/>
     <soapenv:Body>
         <ns:listRoutePlan sequence="1">

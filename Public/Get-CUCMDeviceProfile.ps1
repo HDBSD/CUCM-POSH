@@ -1,3 +1,36 @@
+
+<#
+.SYNOPSIS
+Gets a Cisco Unified Call Manager (CUCM) Device Profile by name.
+
+.DESCRIPTION
+This function retrieves a CUCM Device Profile by its name.
+
+.PARAMETER ProfileName
+Specifies the name of the Device Profile to retrieve.
+
+.PARAMETER SessionIndex
+Specifies the index of the CUCM session to use for the operation.
+
+.INPUTS
+None.
+
+.OUTPUTS
+Returns the Device Profile information.
+
+.EXAMPLE
+PS> Get-CUCMDeviceProfile -ProfileName "MyDeviceProfile"
+
+Description:
+Retrieves the Device Profile named "MyDeviceProfile."
+
+.EXAMPLE
+PS> Get-CUCMDeviceProfile -ProfileName "MyDeviceProfile" -SessionIndex 1
+
+Description:
+Retrieves the Device Profile named "MyDeviceProfile" using the specified session index.
+#>
+
 function Get-CUCMDeviceProfile {
     param(
         [Parameter(ParameterSetName = 'Connect', Mandatory = $true, Position = 0)][string]$ProfileName,
