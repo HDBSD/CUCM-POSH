@@ -1,91 +1,86 @@
+<#
+.SYNOPSIS
+Creates and validates a Cisco Unified Call Manager (CUCM) AXL connection.
+
+.DESCRIPTION
+This function creates and validates a CUCM AXL connection. It takes the AXL URL of CUCM (e.g., https://10.10.20.1:8443/axl/) and creates a session for viewing and managing objects within Call Manager.
+
+.PARAMETER CUCMAddress
+Specifies the URI of CUCM's AXL endpoint. Typically, this will be in the format https://10.10.20.1:8443/axl/.
+
+.PARAMETER Credentials
+Specifies the username and password to authenticate with Call Manager. Ensure this user account has AXL access within Call Manager.
+
+.PARAMETER NoAddressValidation
+By default, this script validates that the provided address meets the following criteria:
+- Uses 'https'
+- Uses port 8443
+- Requests the path '/axl/'
+
+By specifying this switch, these validations are disabled. Note that Call Manager is specific about the AXL URL and may throw authentication errors if there are any mistakes.
+
+.INPUTS
+None.
+
+.OUTPUTS
+None. Session tokens are stored in memory.
+
+.EXAMPLE
+PS> Connect-CUCM -CUCMAddress "https://10.10.20.1:8443/axl/"
+
+.EXAMPLE
+PS> Connect-CUCM -CUCMAddress "https://10.10.20.1:8443/axl/" -Credentials $cred
+
+.EXAMPLE
+PS> Connect-CUCM -CUCMAddress "http://10.10.20.1:1234/axl/" -NoAddressValidation
+#>
+
 function Connect-CUCM {
     [CmdletBinding()]
     param(
-        [Parameter(ParameterSetName = 'Connect', Mandatory = $true)]$CUCMAddress,
-        [Parameter(ParameterSetName = 'Connect', Mandatory = $true)][PSCredential]$Credentials,
-        [Parameter(ParameterSetName = 'Connect', Mandatory = $false)][switch]$NoAddressValidation = $false
+        [Parameter(ParameterSetName = 'Connect', Mandatory = $true)]
+        $CUCMAddress,
+
+        [Parameter(ParameterSetName = 'Connect', Mandatory = $true)]
+        [PSCredential]
+        $Credentials,
+
+        [Parameter(ParameterSetName = 'Connect', Mandatory = $false)]
+        [switch]
+        $NoAddressValidation = $false
     )
-
-    <#
-    .SYNOPSIS
-    Creates and validates Cisco Unified Call Manager (CUCM) AXL connection 
-
-    .DESCRIPTION
-    Creates and validates CUCM AXL connection 
-    Takes the axl url of CUCM e.g. (https://10.10.20.1:8443/axl/) and creates a session for
-    viewing and managing objects within call manager
-
-    .PARAMETER CUCMAddress
-    Specifies the URI of CUCMs axl endpoint, usually this will be along the lines of https://10.10.20.1:8443/axl/
-
-    .PARAMETER Credentials
-    Specifies the username and password to authenticate to call manager with. ensure this user account has axl access
-    within call manager.
-
-    .PARAMETER NoAddressValidation
-    By default this script will require the following for the CUCMAddress to be considered valid. 
-    The provided address must using 'https', port 8443 and attempt to reach the path '/axl/'.
-
-    By specifying this switch, these validations are disabled. 
-    
-    Note: Call manager is very specific about the AXL url and will often throw authentication not provided errors if there
-    is any mistakes
-
-    .INPUTS
-    None.
-
-    .OUTPUTS
-    None. Session tokens are stored in memory
-
-    .EXAMPLE
-    PS> Connect-CUCM -CUCMAddress "https://10.10.20.1:8443/axl/"
-
-    .EXAMPLE
-    PS> Connect-CUCM -CUCMAddress "https://10.10.20.1:8443/axl/" -Credentials $cred
-
-    .EXAMPLE
-    PS> Connect-CUCM -CUCMAddress "http://10.10.20.1:1234/axl/" -NoAddressValidation
-    #>
 
     begin 
     {
-
-        # build a uri and check its using https, port 8443 and requesting the "/axl/" path
-
+        # Build a URI and check if it uses HTTPS, port 8443, and requests the "/axl/" path
         $uri = $null
 
-        if ($NoAddressValidation -eq $false)
+        if (-not $NoAddressValidation)
         {
             $uri = [System.UriBuilder]::new($CUCMAddress)
-            
-            if  ( $uri.port -ne 8443 -or $uri.Scheme -ne "https" -or $uri.path.ToLower() -ne "/axl/" )
+
+            if ($uri.Port -ne 8443 -or $uri.Scheme -ne "https" -or $uri.Path.ToLower() -ne "/axl/")
             {
-                $PSCmdlet.ThrowTerminatingError("Provided CUCM Address failed validation. if non-standard ports or https is being used, please use the '-NoAddressValidation'.`n" + `
-                                                "For a URI to be considered valid, it most be using 'https', port 8443 and attempt to reach the path '/axl/'. e.g. https://xyz.123.abc.789:8443/axl/")
+                $PSCmdlet.ThrowTerminatingError("Provided CUCM Address failed validation. If non-standard ports or HTTPS is being used, please use the '-NoAddressValidation'.`n" +
+                    "For a URI to be considered valid, it must use 'https', port 8443, and request the path '/axl/'. e.g., https://xyz.123.abc.789:8443/axl/")
             }
-                
         }
         else 
         {
-            # if NoAddressValidation is enabled, just dont bother checking
-
+            # If NoAddressValidation is enabled, skip the validation
             $uri = [System.UriBuilder]::new($CUCMAddress)
         }
 
-        # set URI to the built URI string
-
+        # Set URI to the built URI string
         $uri = $uri.Uri
-
     }
 
     process 
     {
-
-        # build a soap request to query the version of the "cm-ver" package. 
-        # we dont actually use the reply from this query, but if we get a http 200 reply, we know we've connected okay
-
+        # Build a SOAP request to query the version of the "cm-ver" package.
+        # We don't use the reply from this query, but if we get an HTTP 200 reply, we know we've connected successfully
         $soapReq = @"
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/14.0">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/$script:AxlVersion">
     <soapenv:Header/>
     <soapenv:Body>
         <ns:executeSQLQuery>
@@ -97,28 +92,21 @@ function Connect-CUCM {
 
         try 
         {
-
-            # create a session to hold our axl session cookie
-
+            # Create a session to hold our AXL session cookie
             $sessionVar = New-Object Microsoft.PowerShell.Commands.WebRequestSession 
 
-            # post the above soap AXL request to call manager and throw a terminating error if we dont get a successful reply
-
+            # Post the SOAP AXL request to Call Manager and throw a terminating error if we don't get a successful reply
             $Result = Invoke-RestMethod -Method Post -ContentType "text/xml" -Body $soapReq `
-                                        -Credential $Credentials -Uri $uri -WebSession $sessionVar `
-                                        -ErrorAction Stop
+                                        -Credential $Credentials -Uri $uri -WebSession $sessionVar -ErrorAction Stop
         
+            # Store the session in the Connections script variable for later use
+            $id = New-Guid
+            $script:Connections += [pscustomobject]@{ ID = $id; Server = $CUCMAddress; Session = $sessionVar }
+            Write-Host "Connection successful. Session assigned ID: $id"
         }
         catch
         {
             $PSCmdlet.ThrowTerminatingError($_)
         }
-
-        # store session in connections script var for later use.
-
-        $id = New-Guid
-
-        $script:Connections += [pscustomobject]@{ID=$id; Server = $CUCMAddress; Session=$sessionVar}
-        write-host "Connection successful. Session assigned ID: $id)"
     }
 }
