@@ -34,7 +34,7 @@ class CallForward
 
     [string] ToXML()
     {
-        if ($this.ForwardType -ne [CallForwardTypes]::All -and $null -ne $this.SecondaryCallingSearchSpaceName)
+        if ($this.ForwardType -ne [CallForwardTypes]::All -and -not [string]::IsNullOrEmpty($this.SecondaryCallingSearchSpaceName))
         {
             throw "Cannot create an XML from CallForward object - SecondaryCallingSearchSpaceName must be null if ForwardType is not All"
         }
@@ -42,20 +42,44 @@ class CallForward
         $basepad = ("".PadLeft($this.indentLength * $this.indentDepth,' '))
         $pad     = ("".PadLeft($this.indentLength,' '))
 
-        
-        $obj  =   "$($basepad)<callForward$($this.TagName)>"
-        $obj += "`n$($basepad + $pad)<forwardToVoiceMail>$($this.VoiceMail.ToString().ToLower())</forwardToVoiceMail>"
-        $obj += "`n$($basepad + $pad)<callingSearchSpaceName>$($this.CallingSearchSpaceName)</callingSearchSpaceName>"
+        $loop = @()
 
-        if ($this.SecondaryCallingSearchSpaceName)
-        { 
-            $obj += "`n$($basepad + $pad)<secondaryCallingSearchSpaceName>$this.SecondaryCallingSearchSpaceName</secondaryCallingSearchSpaceName>"
+        if ($this.ForwardType -eq [CallForwardTypes]::CoverAllTypes)
+        {
+            $loop = ([CallForwardTypes]::GetValues([CallForwardTypes]) | Select-Object -SkipLast 1)
+        }
+        else {
+            $loop = @($this.ForwardType)
+        }
+        
+        $obj = $null
+
+        foreach ($itm in $loop)
+        {
+            write-host $itm
+
+            if ($null -ne $obj)
+            {
+                $obj += "`n"    
+            }
+
+            $obj +=   "$($basepad)<callForward$($itm)>"
+            $obj += "`n$($basepad + $pad)<forwardToVoiceMail>$($this.VoiceMail.ToString().ToLower())</forwardToVoiceMail>"
+            $obj += "`n$($basepad + $pad)<callingSearchSpaceName>$($this.CallingSearchSpaceName)</callingSearchSpaceName>"
+
+            if ($this.SecondaryCallingSearchSpaceName)
+            { 
+                $obj += "`n$($basepad + $pad)<secondaryCallingSearchSpaceName>$this.SecondaryCallingSearchSpaceName</secondaryCallingSearchSpaceName>"
+            }
+
+            if ($this.Destination)
+            {
+                $obj += "`n$($basepad + $pad)<destination>$($this.Destination)</destination>"
+            }
+            
+            $obj += "`n$($basepad)</callForward$($itm)>"
         }
 
-        $obj += "`n$($basepad + $pad)<destination>$($this.Destination)</destination>"
-        $obj += "`n$($basepad)</callForward$($this.TagName)>"
-
         return $obj
-        
     }
 }
