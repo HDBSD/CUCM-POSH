@@ -1,7 +1,7 @@
 # Define module-level variables
 
 $script:Connections = @()
-$Script:AxlVersion = "12.0"
+$Script:AxlVersion = "12.5"
 
 # Get a list of all script files to import
 
