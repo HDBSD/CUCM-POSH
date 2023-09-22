@@ -11,14 +11,14 @@ Each enum value represents a specific call forward scenario.
 # Values:
 - All: Forward all calls.
 - Busy: Forward calls when the line is busy.
-- BusyInt: Forward calls when the line is busy, international destinations.
+- BusyInt: Forward calls when the line is busy, Internal destinations.
 - NoAnswer: Forward calls when there is no answer.
-- NoAnswerInt: Forward calls when there is no answer, international destinations.
+- NoAnswerInt: Forward calls when there is no answer, Internal destinations.
 - NoCoverage: Forward calls when there is no coverage.
 - OnFailure: Forward calls on failure.
 - AlternateParty: Forward calls to an alternate party.
 - NotRegistered: Forward calls when the phone is not registered.
-- NotRegisteredInt: Forward calls when the phone is not registered, international destinations.
+- NotRegisteredInt: Forward calls when the phone is not registered, Internal destinations.
 
 .NOTES
 Author: Brad S
