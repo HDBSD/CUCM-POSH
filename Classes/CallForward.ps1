@@ -29,8 +29,8 @@ class CallForward
     [string]$CallingSearchSpaceName
     [string]$SecondaryCallingSearchSpaceName = $null
     [string]$Destination
-    [int]$indentLength = 2
-    [int]$indentDepth = 10
+    [int]$indentLength = 4
+    [int]$indentDepth = 4
 
     [string] ToXML()
     {
@@ -56,27 +56,26 @@ class CallForward
 
         foreach ($itm in $loop)
         {
-            write-host $itm
 
             if ($null -ne $obj)
             {
-                $obj += "`n"    
+                $obj += "`n$($basepad)"    
             }
 
-            $obj +=   "$($basepad)<callForward$($itm)>"
+            $obj +=   "<callForward$($itm)>"
             $obj += "`n$($basepad + $pad)<forwardToVoiceMail>$($this.VoiceMail.ToString().ToLower())</forwardToVoiceMail>"
             $obj += "`n$($basepad + $pad)<callingSearchSpaceName>$($this.CallingSearchSpaceName)</callingSearchSpaceName>"
 
             if ($this.SecondaryCallingSearchSpaceName)
             { 
-                $obj += "`n$($basepad + $pad)<secondaryCallingSearchSpaceName>$this.SecondaryCallingSearchSpaceName</secondaryCallingSearchSpaceName>"
+                $obj += "`n$($basepad + $pad)<secondaryCallingSearchSpaceName>$($this.SecondaryCallingSearchSpaceName)</secondaryCallingSearchSpaceName>"
             }
 
             if ($this.Destination)
             {
                 $obj += "`n$($basepad + $pad)<destination>$($this.Destination)</destination>"
             }
-            
+
             $obj += "`n$($basepad)</callForward$($itm)>"
         }
 
