@@ -122,7 +122,7 @@ function New-CUCMLine {
             $PSCmdlet.ThrowTerminatingError($_)
         }
 
-        $Result
+        $Result.Envelope.Body.addLineResponse.return
         
     }
 
