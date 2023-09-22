@@ -15,6 +15,7 @@ Each enum value represents a specific call forward scenario.
 - NoAnswer: Forward calls when there is no answer.
 - NoAnswerInt: Forward calls when there is no answer, Internal destinations.
 - NoCoverage: Forward calls when there is no coverage.
+- NoCoverageInt: Forward calls when there is no coverage, Internal destinations.
 - OnFailure: Forward calls on failure.
 - AlternateParty: Forward calls to an alternate party.
 - NotRegistered: Forward calls when the phone is not registered.
@@ -33,6 +34,7 @@ enum CallForwardTypes {
     NoAnswer
     NoAnswerInt
     NoCoverage
+    NoCoverageInt
     OnFailure
     AlternateParty
     NotRegistered
