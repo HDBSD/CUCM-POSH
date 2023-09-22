@@ -19,6 +19,7 @@ Each enum value represents a specific call forward scenario.
 - AlternateParty: Forward calls to an alternate party.
 - NotRegistered: Forward calls when the phone is not registered.
 - NotRegisteredInt: Forward calls when the phone is not registered, Internal destinations.
+- CoverAllTypes: Custom State which will result in ToXML generating a call forward block for all the above types.
 
 .NOTES
 Author: Brad S
@@ -36,4 +37,5 @@ enum CallForwardTypes {
     AlternateParty
     NotRegistered
     NotRegisteredInt
+    CoverAllTypes
 }
