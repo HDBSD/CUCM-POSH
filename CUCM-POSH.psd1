@@ -34,8 +34,8 @@
         'Get-CUCMAxlVersion',
         'Get-CUCMDeviceProfile',
         'Get-CUCMRoutePlan',
-        'Get-CUCMSessions',
-        'New-CUCMForwardBlock',
+        'Get-CUCMSession',
+        'Remove-CUCMSession',
         'Set-CUCMAxlVersion',
         'Set-CUCMIgnoreSSL',
         'Start-CUCMLdapSync'

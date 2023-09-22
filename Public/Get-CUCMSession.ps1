@@ -22,19 +22,19 @@ A list of CUCM sessions. Each session contains:
 - Session: The session object.
 
 .EXAMPLE
-PS> Get-CUCMSessions
+PS> Get-CUCMSession
 
 Description:
 Retrieves all active CUCM sessions.
 
 .EXAMPLE
-PS> Get-CUCMSessions -SessionId "abc123"
+PS> Get-CUCMSession -SessionId "abc123"
 
 Description:
 Retrieves the CUCM session with the specified SessionId.
 
 .EXAMPLE
-PS> Get-CUCMSessions -Index 0
+PS> Get-CUCMSession -Index 0
 
 Description:
 Retrieves the first CUCM session by index.
@@ -44,7 +44,7 @@ Author: Brad S
 Version: 1.2.0
 #>
 
-function Get-CUCMSessions
+function Get-CUCMSession
 {
     [CmdletBinding()]
     param(
