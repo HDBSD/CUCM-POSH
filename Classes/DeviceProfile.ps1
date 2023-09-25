@@ -1,3 +1,22 @@
+<#
+.SYNOPSIS
+Class for representing a line directory number in a Cisco device profile.
+
+.DESCRIPTION
+The `deviceProfileLinedDirn` class represents a line directory number within a Cisco device profile. It includes properties for the pattern of the number and the associated route partition name.
+
+.PROPERTIES
+- `$pattern` (string): The pattern of the line directory number.
+- `$routeParitionName` (string): The route partition name for the line directory number.
+
+.CONSTRUCTORS
+- `deviceProfileLinedDirn($pattern, $partition)`: Initializes a `deviceProfileLinedDirn` object with the provided pattern and partition values.
+
+.NOTES
+Author: Brad S
+Version: 1.0.0
+#>
+
 class deviceProfileLinedDirn {
     [string]$pattern
     [string]$routeParitionName
@@ -8,12 +27,48 @@ class deviceProfileLinedDirn {
     }
 }
 
+<#
+.SYNOPSIS
+Class for configuring call information display settings in a Cisco device profile.
+
+.DESCRIPTION
+The `deviceProfileCallInfoDisplay` class allows you to configure call information display settings within a Cisco device profile. It includes properties to control the display of caller names, caller numbers, redirected numbers, and dialed numbers.
+
+.PROPERTIES
+- `$callerName` (bool): Indicates whether to display caller names.
+- `$callerNumber` (bool): Indicates whether to display caller numbers.
+- `$redirectedNumber` (bool): Indicates whether to display redirected numbers.
+- `$dialedNumber` (bool): Indicates whether to display dialed numbers.
+
+.NOTES
+Author: Brad S
+Version: 1.0.0
+#>
+
 class deviceProfileCallInfoDisplay {
     [bool]$callerName = $true
     [bool]$callerNumber = $false
     [bool]$redirectedNumber = $false
     [bool]$dialedNumber = $true
 }
+
+<#
+.SYNOPSIS
+Class for managing end users associated with a Cisco device profile.
+
+.DESCRIPTION
+The `deviceProfileEndusers` class is used to manage a collection of end users associated with a Cisco device profile. It includes an array property for storing `deviceProfileEnduser` objects representing individual end users.
+
+.PROPERTIES
+- `$enduser` (array of deviceProfileEnduser): An array of `deviceProfileEnduser` objects representing end users associated with the device profile.
+
+.CONSTRUCTORS
+- `deviceProfileEndusers($usr)`: Initializes a `deviceProfileEndusers` object with an array of `deviceProfileEnduser` objects based on the provided user IDs.
+
+.NOTES
+Author: Brad S
+Version: 1.0.0
+#>
 
 class deviceProfileEndusers
 {
@@ -25,6 +80,24 @@ class deviceProfileEndusers
     }
 }
 
+<#
+.SYNOPSIS
+Class for representing an end user in a Cisco device profile.
+
+.DESCRIPTION
+The `deviceProfileEnduser` class represents an individual end user associated with a Cisco device profile. It includes a property for the user ID.
+
+.PROPERTIES
+- `$userId` (string): The user ID associated with the end user.
+
+.CONSTRUCTORS
+- `deviceProfileEnduser($usr)`: Initializes a `deviceProfileEnduser` object with the provided user ID.
+
+.NOTES
+Author: Brad S
+Version: 1.0.0
+#>
+
 class deviceProfileEnduser
 {
     [string]$userId
@@ -34,6 +107,24 @@ class deviceProfileEnduser
     }
 
 }
+
+<#
+.SYNOPSIS
+Class for configuring a line within a Cisco device profile.
+
+.DESCRIPTION
+The `deviceProfileLine` class is used to configure a line within a Cisco device profile. It includes properties for various line settings such as index, label, display, directory number (`dirn`), ring settings, call information display, and more. It also provides a method to convert the line configuration to XML format.
+
+.PROPERTIES
+- Various properties for configuring line settings.
+
+.METHODS
+- `ToXml()`: Generates an XML representation of the line configuration.
+
+.NOTES
+Author: Brad S
+Version: 1.0.0
+#>
 
 class deviceProfileLine {
     [int]$index = 1
@@ -105,6 +196,24 @@ class deviceProfileLine {
         return $linesString
     }
 }
+
+<#
+.SYNOPSIS
+Class for configuring a Cisco device profile.
+
+.DESCRIPTION
+The `deviceProfile` class is used to configure a Cisco device profile. It includes properties for various device profile settings such as name, description, product, model, lines, and other device-specific settings. It also provides a method to convert the device profile configuration to XML format for use in Cisco Unified Call Manager (CUCM) configurations.
+
+.PROPERTIES
+- Various properties for configuring device profile settings.
+
+.METHODS
+- `ToXml()`: Generates an XML representation of the device profile configuration.
+
+.NOTES
+Author: Brad S
+Version: 1.0.0
+#>
 
 class deviceProfile {
     [string]$name

@@ -1,83 +1,104 @@
+<#
+.SYNOPSIS
+Creates a new Line configuration for Cisco Unified Call Manager (CUCM).
+
+.DESCRIPTION
+The `New-CUCMLine` function generates a Line configuration for CUCM with specified parameters such as pattern, description, route partition name, call forwarding block, alerting name, usage, share line appearance CSS name, and session index.
+
+.PARAMETER Pattern
+Specifies the pattern for the Line.
+
+.PARAMETER Description
+Specifies the description for the Line.
+
+.PARAMETER RouteParitionName
+Specifies the route partition name for the Line.
+
+.PARAMETER CallForwardingBlock
+Specifies an array of call forwarding blocks to configure call forwarding settings.
+
+.PARAMETER AlertingName
+Specifies the alerting name for the Line.
+
+.PARAMETER Usage
+Specifies the usage for the Line. Default is "Device".
+
+.PARAMETER ShareLineAppearanceCssName
+Specifies the name of the shared line appearance CSS.
+
+.PARAMETER SessionIndex
+Specifies the index of the CUCM server connection to use. Default is 0.
+
+.EXAMPLE
+PS> $callForwardingBlock1 = New-CUCMCallForwardBlock -Pattern "12345" -CallingSearchSpace "CSS1"
+PS> $callForwardingBlock2 = New-CUCMCallForwardBlock -Pattern "67890" -CallingSearchSpace "CSS2"
+PS> $line = New-CUCMLine -Pattern "54321" -Description "My Line" -RouteParitionName "Partition1" -CallForwardingBlock $callForwardingBlock1, $callForwardingBlock2 -AlertingName "AlertName" -Usage "User" -ShareLineAppearanceCssName "SharedCSS"
+
+Description:
+Creates a new Line configuration with the specified parameters, including multiple call forwarding blocks.
+
+.NOTES
+Author: Brad S
+Version: 1.0.0
+#>
+
 function New-CUCMLine {
     [CmdletBinding()]
     param (
-        # Parameter help description
         [Parameter(Mandatory = $true)]
         [string]
         $Pattern,
 
-
-        # Parameter help description
         [Parameter(Mandatory = $true)]
         [string]
         $Description,
 
-
-        # Parameter help description
         [Parameter(Mandatory = $true)]
         [string]
         $RouteParitionName,
 
-        
-        # Parameter help description
         [Parameter(Mandatory = $true)]
         [System.Array]
         $CallForwardingBlock,
 
-
-        # Parameter help description
         [Parameter(Mandatory = $true)]
         [string]
         $AlertingName,
 
-
-        # Parameter help description
         [Parameter(Mandatory = $false)]
         [string]
-        $usage = "Device",
+        $Usage = "Device",
 
-
-        # Parameter help description
         [Parameter(Mandatory = $true)]
         [String]
         $ShareLineAppearanceCssName,
 
-        # Parameter help description
         [Parameter(Mandatory = $false)]
         [int]
         $SessionIndex = 0
     )
     
     begin {
-        
-
         $fwrdBlock = $null
 
-        if ($CallForwardingBlock.Length -eq 0)
-        {
+        if ($CallForwardingBlock.Length -eq 0) {
             throw "Empty CallForwardingBlock provided"
         }
-        elseif ($CallForwardingBlock.Length -eq 1 -and $CallForwardingBlock[0].ForwardType -eq [CallForwardTypes]::CoverAllTypes) 
-        {
+        elseif ($CallForwardingBlock.Length -eq 1 -and $CallForwardingBlock[0].ForwardType -eq [CallForwardTypes]::CoverAllTypes) {
             $fwrdBlock = $CallForwardingBlock[0].ToXML()
         }
         else {
-
-            foreach ($block in $CallForwardingBlock)
-            {
-                if ($null -ne $fwrdBlock)
-                {
+            foreach ($block in $CallForwardingBlock) {
+                if ($null -ne $fwrdBlock) {
                     $fwrdBlock += "`n"
                 }
-
                 $fwrdBlock += $block.ToXML()
             }
         }
-
     }
     
     process {
-        $soapReq = @"        
+        $soapReq = @"
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/$script:AxlVersion">
     <soapenv:Header/>
     <soapenv:Body>
@@ -85,14 +106,14 @@ function New-CUCMLine {
             <line>
                 <pattern>$Pattern</pattern>
                 <description>$Description</description>
-                <usage>$usage</usage>
+                <usage>$Usage</usage>
                 <routePartitionName>$RouteParitionName</routePartitionName>
                 <aarKeepCallHistory>true</aarKeepCallHistory>
                 <aarVoiceMailEnabled>false</aarVoiceMailEnabled>
                 $fwrdBlock
                 <alertingName>$AlertingName</alertingName>
                 <asciiAlertingName>$AlertingName</asciiAlertingName>
-                <shareLineAppearanceCssName>$shareLineAppearanceCssName</shareLineAppearanceCssName>
+                <shareLineAppearanceCssName>$ShareLineAppearanceCssName</shareLineAppearanceCssName>
                 <enterpriseAltNum>
                     <isUrgent>f</isUrgent>
                     <addLocalRoutePartition>f</addLocalRoutePartition>
@@ -117,13 +138,10 @@ function New-CUCMLine {
                                         -WebSession $script:Connections[$SessionIndex].Session -Uri $script:Connections[$SessionIndex].Server `
                                         -ErrorAction Stop
         }
-        catch 
-        {
+        catch {
             $PSCmdlet.ThrowTerminatingError($_)
         }
 
         $Result.Envelope.Body.addLineResponse.return
-        
     }
-
 }
