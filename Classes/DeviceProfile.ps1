@@ -251,7 +251,7 @@ class deviceProfile {
         }
 
         $soapReq = @"
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/12.5">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/$script:AxlVersion">
     <soapenv:Header/>
     <soapenv:Body>
         <ns:addDeviceProfile sequence="1">
